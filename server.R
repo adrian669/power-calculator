@@ -22,10 +22,7 @@ server <- function(input, output) {
   
   
   output$plot <- renderPlotly({
-    print(data())
-    
-    
-    
+
     p = ggplot(
       data = data(),
       mapping = aes(
@@ -43,7 +40,7 @@ server <- function(input, output) {
       geom_line() +
       scale_x_log10(labels = comma_format()) +
       scale_y_continuous(labels = percent_format(), limits = c(0, 1)) +
-      labs(x = "Number of observation per group (log scale)",
+      labs(x = "Number of observations per group (log scale)",
            y = "power")
     
     gg = plotly::ggplotly(p, tooltip = "text")

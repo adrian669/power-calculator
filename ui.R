@@ -51,13 +51,11 @@ ui <- fluidPage(titlePanel("Power t test calculator"),
                       "Sig level",
                       min = 0.001,
                       max = 1,
-                      value = 0.01
+                      value = 0.05
                     )
                   ),
                   
                   mainPanel(plotlyOutput("plot"),
                             DT::dataTableOutput(outputId = "table")
                             )
-                  
-                  
                 ))
