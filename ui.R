@@ -7,6 +7,7 @@ library(DT)
 theme_set(theme_minimal())
 pdf(NULL)
 
+ 
 ui <- fluidPage(titlePanel("Power t test calculator"),
                 
                 sidebarLayout(
