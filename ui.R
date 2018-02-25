@@ -7,11 +7,18 @@ library(DT)
 theme_set(theme_minimal())
 pdf(NULL)
 
- 
-ui <- fluidPage(titlePanel("Power t test calculator"),
+
+ui <- fluidPage(titlePanel("Power test calculator"),
                 
                 sidebarLayout(
                   sidebarPanel(
+                    selectInput(
+                      inputId = "test",
+                      label = "Choose a test",
+                      choices = c("t test",
+                                  "Two sample test for proportions")
+                    ),
+                    
                     selectInput(
                       inputId = "type",
                       label = "Type of test",
@@ -31,32 +38,65 @@ ui <- fluidPage(titlePanel("Power t test calculator"),
                       selected = 10 ^ 4
                     ),
                     
-                    sliderInput(
-                      "delta",
-                      "Effect size",
-                      min = 0.001,
-                      max = 1,
-                      value = 0.1
+                    conditionalPanel(
+                      condition = "input.test == 't test'",
+                      sliderInput(
+                        "delta",
+                        "Effect size",
+                        min = 0.001,
+                        max = 1,
+                        value = 0.1
+                      )
                     ),
                     
-                    sliderInput(
-                      "sd",
-                      "Standard deviation",
-                      min = 0.001,
-                      max = 10,
-                      value = 0.1
+                    conditionalPanel(
+                      condition = "input.test == 't test'",
+                      numericInput(
+                        "sd",
+                        "Standard deviation",
+                        min = 0.0001,
+                        max = Inf,
+                        value = 0.1
+                      )
                     ),
                     
-                    sliderInput(
+                    numericInput(
                       "sig.level",
                       "Sig level",
-                      min = 0.001,
+                      min = 0.0001,
                       max = 1,
                       value = 0.05
-                    )
+                    ),
+                    
+                    conditionalPanel(
+                      condition = "input.test == 'Two sample test for proportions'",
+                      numericInput(
+                        "p1",
+                        "Probability in one group",
+                        min = 0,
+                        max = 1,
+                        value = 0.5
+                      )
+                    ),
+                    
+                    conditionalPanel(
+                      condition = "input.test == 'Two sample test for proportions'",
+                      numericInput(
+                        "p2",
+                        "Probability in other group",
+                        min = 0,
+                        max = 1,
+                        value = 0.5
+                      )
+                    ),
+                    width = 2
+                    
+                    
+                    
                   ),
                   
-                  mainPanel(plotlyOutput("plot"),
-                            DT::dataTableOutput(outputId = "table")
-                            )
+                  mainPanel(tabsetPanel(
+                    tabPanel("Plot", plotlyOutput("plot")),
+                    tabPanel("Table", DT::dataTableOutput(outputId = "table"))
+                  ), width = 10)
                 ))
